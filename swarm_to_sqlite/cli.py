@@ -2,7 +2,7 @@ import click
 import os
 import json
 import sqlite_utils
-from .utils import save_checkin, ensure_foreign_keys, create_views
+from .utils import save_checkin, ensure_foreign_keys, create_views, fetch_all_checkins
 
 
 @click.command()
@@ -12,18 +12,24 @@ from .utils import save_checkin, ensure_foreign_keys, create_views
     required=True,
 )
 @click.option("-t", "--token", help="Foursquare OAuth token")
-@click.option("-f", "--file", help="Path to JSON file on disk")
+@click.option("--load", help="Load checkins from this JSON file on disk")
+@click.option("--save", help="Save checkins to this JSON file on disk")
 @click.option("-s", "--silent", is_flag=True, help="Don't show progress bar")
-def cli(db_path, token, file, silent):
+def cli(db_path, token, load, save, silent):
     "Save Swarm checkins to a SQLite database"
-    if not ((token or file) and not (token and file)):
-        raise click.ClickException("Provide either --file or --token")
+    if token and load:
+        raise click.ClickException("Provide either --load or --token")
+
+    if not token and not load:
+        token = click.prompt(
+            "Please provide your Foursquare OAuth token", hide_input=True
+        )
 
     if token:
         checkins = fetch_all_checkins(token, count_first=True)
         checkin_count = next(checkins)
     else:
-        checkins = json.load(open(file))
+        checkins = json.load(open(load))
         checkin_count = len(checkins)
     db = sqlite_utils.Database(db_path)
     if silent:

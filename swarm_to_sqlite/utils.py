@@ -1,4 +1,5 @@
 import datetime
+import requests
 from sqlite_utils.db import AlterError, ForeignKey
 
 
@@ -40,7 +41,7 @@ def save_checkin(checkin, db):
     else:
         checkin["sticker"] = None
 
-    checkin["createdAt"] = datetime.datetime.fromtimestamp(
+    checkin["created"] = datetime.datetime.fromtimestamp(
         checkin["createdAt"]
     ).isoformat()
     checkin["source"] = db["sources"].lookup(checkin["source"])
@@ -74,7 +75,7 @@ def save_checkin(checkin, db):
     # Handle photos
     photos_table = db.table("photos", pk="id", foreign_keys=("user", "source"))
     for photo in photos:
-        photo["createdAt"] = datetime.datetime.fromtimestamp(
+        photo["created"] = datetime.datetime.fromtimestamp(
             photo["createdAt"]
         ).isoformat()
         photo["source"] = db["sources"].lookup(photo["source"])
@@ -86,9 +87,7 @@ def save_checkin(checkin, db):
     # Handle posts
     posts_table = db.table("posts", pk="id")
     for post in posts:
-        post["createdAt"] = datetime.datetime.fromtimestamp(
-            post["createdAt"]
-        ).isoformat()
+        post["created"] = datetime.datetime.fromtimestamp(post["createdAt"]).isoformat()
         post["post_source"] = (
             db["post_sources"].upsert(post.pop("source"), pk="id").last_pk
         )
@@ -140,8 +139,8 @@ def create_views(db):
             "venue_details",
             """
 select
-    min(createdAt) as first,
-    max(createdAt) as last,
+    min(created) as first,
+    max(created) as last,
     count(venues.id) as count,
     group_concat(distinct categories.name) as venue_categories,
     venues.*
@@ -157,7 +156,7 @@ group by venues.id
             """
 select
     checkins.id,
-    createdAt,
+    created,
     venues.id as venue_id,
     venues.name as venue_name,
     venues.latitude,
@@ -180,3 +179,30 @@ order by createdAt desc
             db.create_view(name, sql)
         except Exception:
             pass
+
+
+def fetch_all_checkins(token, count_first=False):
+    # Generator that yields all checkins using the provided OAuth token
+    # If count_first is True it first yields the total checkins count
+    beforeTimestamp = None
+    params = {
+        "oauth_token": token,
+        "v": "20190101",
+        "sort": "newestfirst",
+        "limit": "250",
+    }
+    first = True
+    while True:
+        if beforeTimestamp is not None:
+            params["beforeTimestamp"] = beforeTimestamp
+        url = "https://api.foursquare.com/v2/users/self/checkins"
+        data = requests.get(url, params).json()
+        if first:
+            first = False
+            if count_first:
+                yield data["response"]["checkins"]["count"]
+        if not data.get("response", {}).get("checkins", {}).get("items"):
+            break
+        for item in data["response"]["checkins"]["items"]:
+            yield item
+        beforeTimestamp = item["createdAt"]

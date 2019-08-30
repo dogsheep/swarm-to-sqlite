@@ -189,35 +189,38 @@ def test_photos(converted):
     assert [
         {
             "id": "5b3840f34a7aae002c7845ee",
-            "createdAt": "2018-07-01T04:48:19",
+            "createdAt": 1530413299,
             "source": 1,
             "prefix": "https://fastly.4sqi.net/img/general/",
             "suffix": "/15889193_ptDsf3Go3egIPU6WhwC4lIsEQLpW5SXxY3J1YyTY7Wc.jpg",
             "width": 1920,
             "height": 1440,
             "visibility": "public",
+            "created": "2018-07-01T04:48:19",
             "user": "15889193",
         },
         {
             "id": "5b38417b16fa04002c718f84",
-            "createdAt": "2018-07-01T04:50:35",
+            "createdAt": 1530413435,
             "source": 1,
             "prefix": "https://fastly.4sqi.net/img/general/",
             "suffix": "/15889193_GrExrA5SoKhYBK6VhZ0g97Zy8qcEdqLpuUCJSTxzaWI.jpg",
             "width": 1920,
             "height": 1440,
             "visibility": "public",
+            "created": "2018-07-01T04:50:35",
             "user": "15889193",
         },
         {
             "id": "5b38417d04d1ae002c53b844",
-            "createdAt": "2018-07-01T04:50:37",
+            "createdAt": 1530413437,
             "source": 1,
             "prefix": "https://fastly.4sqi.net/img/general/",
             "suffix": "/15889193__9cPZDE4Y1dhNgrqueMSFYnv20k4u1hHiqPxw5m3JOc.jpg",
             "width": 1920,
             "height": 1440,
             "visibility": "public",
+            "created": "2018-07-01T04:50:37",
             "user": "15889193",
         },
     ] == photos
@@ -239,10 +242,11 @@ def test_posts(converted):
     assert [
         {
             "id": "58994045e386e304939156e0",
-            "createdAt": "2017-02-07T04:34:29",
+            "createdAt": 1486438469,
             "text": "The samosa chaat appetizer (easily enough for two or even four people) was a revelation - I've never tasted anything quite like it before, absolutely delicious. Chicken tika masala was amazing too.",
             "url": "https://foursquare.com/item/58994045668af77dae50b376",
             "contentId": "58994045668af77dae50b376",
+            "created": "2017-02-07T04:34:29",
             "post_source": "UJXJTUHR42CKGO54KXQWGUZJL3OJKMKMVHGJ1SWIOC5TRKAC",
             "checkin": "592b2cfe09e28339ac543fde",
         }
@@ -265,7 +269,7 @@ def test_view(converted):
     assert [
         {
             "id": "592b2cfe09e28339ac543fde",
-            "createdAt": "2017-05-28T22:03:10",
+            "created": "2017-05-28T22:03:10",
             "venue_id": "453774dcf964a520bd3b1fe3",
             "venue_name": "Restaurant Name",
             "latitude": 38.456,
