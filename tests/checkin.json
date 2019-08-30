@@ -1,0 +1,276 @@
+{
+  "id": "592b2cfe09e28339ac543fde",
+  "createdAt": 1496001790,
+  "type": "checkin",
+  "entities": [
+    {
+      "indices": [
+        31,
+        38
+      ],
+      "type": "user",
+      "id": "900"
+    }
+  ],
+  "shout": "7th wedding anniversary — with Natalie",
+  "timeZoneOffset": -420,
+  "with": [
+    {
+      "id": "900",
+      "firstName": "Natalie",
+      "lastName": "Downe",
+      "gender": "female",
+      "relationship": "friend",
+      "photo": {
+        "prefix": "https://fastly.4sqi.net/img/user/",
+        "suffix": "/nd.jpg"
+      }
+    }
+  ],
+  "venue": {
+    "id": "453774dcf964a520bd3b1fe3",
+    "name": "Restaurant Name",
+    "location": {
+      "address": "Address",
+      "crossStreet": "at cross street",
+      "lat": 38.456,
+      "lng": -122.345,
+      "labeledLatLngs": [
+        {
+          "label": "display",
+          "lat": 38.456,
+          "lng": -122.345
+        }
+      ],
+      "postalCode": "94xxx",
+      "cc": "US",
+      "city": "City",
+      "state": "State",
+      "country": "Country",
+      "formattedAddress": [
+        "Address (at cross street)",
+        "City, State, Zip",
+        "Country"
+      ]
+    },
+    "categories": [
+      {
+        "id": "4bf58dd8d48988d10c941735",
+        "name": "Category Name",
+        "pluralName": "Category Names",
+        "shortName": "Category",
+        "icon": {
+          "prefix": "https://ss3.4sqi.net/img/categories_v2/food/french_",
+          "suffix": ".png"
+        },
+        "primary": true
+      }
+    ]
+  },
+  "likes": {
+    "count": 3,
+    "groups": [
+      {
+        "type": "friends",
+        "count": 3,
+        "items": [
+          {
+            "id": "314",
+            "firstName": "J",
+            "lastName": "T",
+            "gender": "female",
+            "relationship": "friend",
+            "photo": {
+              "prefix": "https://fastly.4sqi.net/img/user/",
+              "suffix": "/jt.jpg"
+            }
+          },
+          {
+            "id": "323",
+            "firstName": "A",
+            "lastName": "R",
+            "gender": "male",
+            "relationship": "friend",
+            "photo": {
+              "prefix": "https://fastly.4sqi.net/img/user/",
+              "suffix": "/ar.png"
+            }
+          },
+          {
+            "id": "778",
+            "firstName": "J",
+            "gender": "none",
+            "relationship": "friend",
+            "photo": {
+              "prefix": "https://fastly.4sqi.net/img/user/",
+              "suffix": "/j"
+            }
+          }
+        ]
+      }
+    ],
+    "summary": "J T, A R & J"
+  },
+  "like": false,
+  "sticker": {
+    "id": "56312102498e50c6f99f1d9b",
+    "name": "Foodie",
+    "image": {
+      "prefix": "https://igx.4sqi.net/img/sticker/",
+      "sizes": [
+        60,
+        94,
+        150,
+        300
+      ],
+      "name": "/foodie_a56e26.png"
+    },
+    "stickerType": "unlockable",
+    "group": {
+      "name": "collectible",
+      "index": 47
+    },
+    "pickerPosition": {
+      "page": 1,
+      "index": 23
+    },
+    "teaseText": "teaseText",
+    "unlockText": "unlockText 😉"
+  },
+  "isMayor": false,
+  "photos": {
+    "count": 3,
+    "items": [
+      {
+        "id": "5b3840f34a7aae002c7845ee",
+        "createdAt": 1530413299,
+        "source": {
+          "name": "Swarm for iOS",
+          "url": "https://www.swarmapp.com"
+        },
+        "prefix": "https://fastly.4sqi.net/img/general/",
+        "suffix": "/15889193_ptDsf3Go3egIPU6WhwC4lIsEQLpW5SXxY3J1YyTY7Wc.jpg",
+        "width": 1920,
+        "height": 1440,
+        "user": {
+          "id": "15889193",
+          "firstName": "Simon",
+          "lastName": "Willison",
+          "gender": "male",
+          "relationship": "self",
+          "photo": {
+            "prefix": "https://fastly.4sqi.net/img/user/",
+            "suffix": "/CNGFSAMX00DB4DYZ.jpg"
+          }
+        },
+        "visibility": "public"
+      },
+      {
+        "id": "5b38417b16fa04002c718f84",
+        "createdAt": 1530413435,
+        "source": {
+          "name": "Swarm for iOS",
+          "url": "https://www.swarmapp.com"
+        },
+        "prefix": "https://fastly.4sqi.net/img/general/",
+        "suffix": "/15889193_GrExrA5SoKhYBK6VhZ0g97Zy8qcEdqLpuUCJSTxzaWI.jpg",
+        "width": 1920,
+        "height": 1440,
+        "user": {
+          "id": "15889193",
+          "firstName": "Simon",
+          "lastName": "Willison",
+          "gender": "male",
+          "relationship": "self",
+          "photo": {
+            "prefix": "https://fastly.4sqi.net/img/user/",
+            "suffix": "/CNGFSAMX00DB4DYZ.jpg"
+          }
+        },
+        "visibility": "public"
+      },
+      {
+        "id": "5b38417d04d1ae002c53b844",
+        "createdAt": 1530413437,
+        "source": {
+          "name": "Swarm for iOS",
+          "url": "https://www.swarmapp.com"
+        },
+        "prefix": "https://fastly.4sqi.net/img/general/",
+        "suffix": "/15889193__9cPZDE4Y1dhNgrqueMSFYnv20k4u1hHiqPxw5m3JOc.jpg",
+        "width": 1920,
+        "height": 1440,
+        "user": {
+          "id": "15889193",
+          "firstName": "Simon",
+          "lastName": "Willison",
+          "gender": "male",
+          "relationship": "self",
+          "photo": {
+            "prefix": "https://fastly.4sqi.net/img/user/",
+            "suffix": "/CNGFSAMX00DB4DYZ.jpg"
+          }
+        },
+        "visibility": "public"
+      }
+    ],
+    "layout": {
+      "name": "3down",
+      "top": {
+        "id": "5b3840f34a7aae002c7845ee"
+      },
+      "bottomLeft": {
+        "id": "5b38417b16fa04002c718f84"
+      },
+      "bottomRight": {
+        "id": "5b38417d04d1ae002c53b844"
+      }
+    }
+  },
+  "posts": {
+    "count": 1,
+    "items": [
+      {
+        "id": "58994045e386e304939156e0",
+        "createdAt": 1486438469,
+        "source": {
+          "id": "UJXJTUHR42CKGO54KXQWGUZJL3OJKMKMVHGJ1SWIOC5TRKAC",
+          "consumerId": "4ccf0eedc566199c563bca8c",
+          "name": "Foursquare for iOS",
+          "photo": "https://foursquare.com/img/blank_app.png",
+          "icon": "https://foursquare.com/img/blank_app_16.png",
+          "detailUrl": "https://foursquare.com/app/foursquare-for-ios/UJXJTUHR42CKGO54KXQWGUZJL3OJKMKMVHGJ1SWIOC5TRKAC",
+          "url": "https://foursquare.com/download/#/iphone"
+        },
+        "text": "The samosa chaat appetizer (easily enough for two or even four people) was a revelation - I've never tasted anything quite like it before, absolutely delicious. Chicken tika masala was amazing too.",
+        "url": "https://foursquare.com/item/58994045668af77dae50b376",
+        "contentId": "58994045668af77dae50b376"
+      }
+    ],
+    "textCount": 1
+  },
+  "comments": {
+    "count": 1
+  },
+  "source": {
+    "name": "Swarm for iOS",
+    "url": "https://www.swarmapp.com"
+  },
+  "event": {
+    "id": "5bf8e4fb646e38002c472397",
+    "name": "A movie",
+    "categories": [
+      {
+        "id": "4dfb90c6bd413dd705e8f897",
+        "name": "Movie",
+        "pluralName": "Movies",
+        "shortName": "Movie",
+        "icon": {
+          "prefix": "https://ss3.4sqi.net/img/categories_v2/arts_entertainment/movietheater_",
+          "suffix": ".png"
+        },
+        "primary": true
+      }
+    ]
+  }
+}
