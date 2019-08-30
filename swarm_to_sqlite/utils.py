@@ -143,9 +143,12 @@ select
     min(createdAt) as first,
     max(createdAt) as last,
     count(venues.id) as count,
+    group_concat(categories.name) as venue_categories,
     venues.*
 from venues
     join checkins on checkins.venue = venues.id
+    join categories_venues on venues.id = categories_venues.venues_id
+    join categories on categories.id = categories_venues.categories_id
 group by venues.id
         """,
         ),

@@ -261,9 +261,7 @@ def test_checkin_with_no_event():
 
 
 def test_view(converted):
-    assert {"checkin_details", "venue_details"} == set(
-        converted.view_names()
-    )
+    assert {"checkin_details", "venue_details"} == set(converted.view_names())
     assert [
         {
             "id": "592b2cfe09e28339ac543fde",
@@ -283,6 +281,7 @@ def test_view(converted):
             "first": "2017-05-28T22:03:10",
             "last": "2017-05-28T22:03:10",
             "count": 1,
+            "venue_categories": "Category Name",
             "id": "453774dcf964a520bd3b1fe3",
             "name": "Restaurant Name",
             "address": "Address",
