@@ -143,7 +143,7 @@ select
     min(createdAt) as first,
     max(createdAt) as last,
     count(venues.id) as count,
-    group_concat(categories.name) as venue_categories,
+    group_concat(distinct categories.name) as venue_categories,
     venues.*
 from venues
     join checkins on checkins.venue = venues.id
