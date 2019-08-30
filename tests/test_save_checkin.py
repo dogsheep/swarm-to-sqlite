@@ -29,6 +29,10 @@ def test_tables(converted):
         "sources",
         "checkins",
         "photos",
+        "categories_events",
+        "events",
+        "posts",
+        "post_sources",
     } == set(converted.table_names())
 
 
@@ -63,6 +67,27 @@ def test_venue(converted):
             "icon_prefix": "https://ss3.4sqi.net/img/categories_v2/food/french_",
             "icon_suffix": ".png",
             "primary": 1,
+        }
+    ] == categories
+
+
+def test_event(converted):
+    event = list(converted["events"].rows)[0]
+    assert {"id": "5bf8e4fb646e38002c472397", "name": "A movie"} == event
+    categories = list(
+        converted["categories"].rows_where(
+            "id in (select categories_id from categories_events where events_id = '5bf8e4fb646e38002c472397')"
+        )
+    )
+    assert [
+        {
+            "id": "4dfb90c6bd413dd705e8f897",
+            "name": "Movie",
+            "pluralName": "Movies",
+            "shortName": "Movie",
+            "primary": 1,
+            "icon_prefix": "https://ss3.4sqi.net/img/categories_v2/arts_entertainment/movietheater_",
+            "icon_suffix": ".png",
         }
     ] == categories
 
@@ -179,11 +204,38 @@ def test_photos(converted):
     ] == photos
 
 
+def test_posts(converted):
+    assert [
+        ForeignKey(
+            table="posts", column="checkin", other_table="checkins", other_column="id"
+        ),
+        ForeignKey(
+            table="posts",
+            column="post_source",
+            other_table="post_sources",
+            other_column="id",
+        ),
+    ] == converted["posts"].foreign_keys
+    posts = list(converted["posts"].rows)
+    assert [
+        {
+            "id": "58994045e386e304939156e0",
+            "createdAt": "2017-02-07T04:34:29",
+            "text": "The samosa chaat appetizer (easily enough for two or even four people) was a revelation - I've never tasted anything quite like it before, absolutely delicious. Chicken tika masala was amazing too.",
+            "url": "https://foursquare.com/item/58994045668af77dae50b376",
+            "contentId": "58994045668af77dae50b376",
+            "post_source": "UJXJTUHR42CKGO54KXQWGUZJL3OJKMKMVHGJ1SWIOC5TRKAC",
+            "checkin": "592b2cfe09e28339ac543fde",
+        }
+    ] == posts
+
+
 def test_checkin_with_no_event():
     checkin = load_checkin()
-    # If no event in checkin, event column should not be there
+    # If no event in checkin, event column should be None
     del checkin["event"]
     db = sqlite_utils.Database(":memory:")
     utils.save_checkin(checkin, db)
     assert 1 == db["checkins"].count
-    assert "event" not in db["checkins"].columns_dict
+    row = list(db["checkins"].rows)[0]
+    assert row["event"] is None

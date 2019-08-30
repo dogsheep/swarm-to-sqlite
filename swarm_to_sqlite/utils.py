@@ -17,6 +17,17 @@ def save_checkin(checkin, db):
         checkin["venue"] = venue["id"]
     else:
         checkin["venue"] = None
+    if "event" in checkin:
+        event = checkin.pop("event")
+        categories = event.pop("categories")
+        e = db["events"].upsert(event, pk="id", alter=True)
+        for category in categories:
+            cleanup_category(category)
+            e.m2m("categories", category, pk="id")
+        checkin["event"] = event["id"]
+    else:
+        checkin["event"] = None
+
     checkin["createdAt"] = datetime.datetime.fromtimestamp(
         checkin["createdAt"]
     ).isoformat()
@@ -27,11 +38,13 @@ def save_checkin(checkin, db):
         users_likes.extend(group["items"])
     del checkin["likes"]
     photos = checkin.pop("photos")["items"]
+    posts = (checkin.pop("posts") or {}).get("items") or []
     if checkin.get("createdBy"):
         created_by_user = checkin.pop("createdBy")
         cleanup_user(created_by_user)
         db["users"].upsert(created_by_user, pk="id")
         checkin["createdBy"] = created_by_user["id"]
+    checkin["comments_count"] = checkin.pop("comments")["count"]
     # Actually save the checkin
     checkins_table = db["checkins"].upsert(
         checkin,
@@ -58,11 +71,29 @@ def save_checkin(checkin, db):
         db["users"].upsert(user, pk="id")
         photo["user"] = user["id"]
         photos_table.upsert(photo)
+    # Handle posts
+    posts_table = db.table("posts", pk="id")
+    for post in posts:
+        post["createdAt"] = datetime.datetime.fromtimestamp(
+            post["createdAt"]
+        ).isoformat()
+        post["post_source"] = (
+            db["post_sources"].upsert(post.pop("source"), pk="id").last_pk
+        )
+        post["checkin"] = checkin["id"]
+        posts_table.upsert(post, foreign_keys=("post_source", "checkin"))
+
     # Add checkin.createdBy => users.id foreign key last, provided the
     # users table exists
     if "users" in db.table_names() and "createdBy" in db["checkins"].columns_dict:
         try:
             db["checkins"].add_foreign_key("createdBy", "users", "id")
+        except AlterError:
+            pass
+    # Same for checkin.event
+    if "events" in db.table_names() and "event" in db["checkins"].columns_dict:
+        try:
+            db["checkins"].add_foreign_key("event", "events", "id")
         except AlterError:
             pass
 
