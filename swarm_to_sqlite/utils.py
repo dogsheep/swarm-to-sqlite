@@ -1,5 +1,5 @@
 import datetime
-from sqlite_utils.db import AlterError
+from sqlite_utils.db import AlterError, ForeignKey
 
 
 def save_checkin(checkin, db):
@@ -27,6 +27,16 @@ def save_checkin(checkin, db):
         checkin["event"] = event["id"]
     else:
         checkin["event"] = None
+
+    if "sticker" in checkin:
+        sticker = checkin.pop("sticker")
+        sticker_image = sticker.pop("image")
+        sticker["image_prefix"] = sticker_image["prefix"]
+        sticker["image_sizes"] = sticker_image["sizes"]
+        sticker["image_name"] = sticker_image["name"]
+        checkin["sticker"] = db["stickers"].upsert(sticker, pk="id", alter=True).last_pk
+    else:
+        checkin["sticker"] = None
 
     checkin["createdAt"] = datetime.datetime.fromtimestamp(
         checkin["createdAt"]
@@ -83,20 +93,6 @@ def save_checkin(checkin, db):
         post["checkin"] = checkin["id"]
         posts_table.upsert(post, foreign_keys=("post_source", "checkin"))
 
-    # Add checkin.createdBy => users.id foreign key last, provided the
-    # users table exists
-    if "users" in db.table_names() and "createdBy" in db["checkins"].columns_dict:
-        try:
-            db["checkins"].add_foreign_key("createdBy", "users", "id")
-        except AlterError:
-            pass
-    # Same for checkin.event
-    if "events" in db.table_names() and "event" in db["checkins"].columns_dict:
-        try:
-            db["checkins"].add_foreign_key("event", "events", "id")
-        except AlterError:
-            pass
-
 
 def cleanup_user(user):
     photo = user.pop("photo", None) or {}
@@ -108,3 +104,29 @@ def cleanup_category(category):
     category["icon_prefix"] = category["icon"]["prefix"]
     category["icon_suffix"] = category["icon"]["suffix"]
     del category["icon"]
+
+
+def ensure_foreign_keys(db):
+    existing = []
+    for table in db.tables:
+        existing.extend(table.foreign_keys)
+    desired = [
+        ForeignKey(
+            table="checkins", column="createdBy", other_table="users", other_column="id"
+        ),
+        ForeignKey(
+            table="checkins", column="event", other_table="events", other_column="id"
+        ),
+        ForeignKey(
+            table="checkins",
+            column="sticker",
+            other_table="stickers",
+            other_column="id",
+        ),
+    ]
+    for fk in desired:
+        if fk not in existing:
+            try:
+                db[fk.table].add_foreign_key(fk.column, fk.other_table, fk.other_column)
+            except AlterError:
+                pass

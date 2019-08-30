@@ -15,6 +15,7 @@ def load_checkin():
 def converted():
     db = sqlite_utils.Database(":memory:")
     utils.save_checkin(load_checkin(), db)
+    utils.ensure_foreign_keys(db)
     return db
 
 
@@ -33,6 +34,7 @@ def test_tables(converted):
         "events",
         "posts",
         "post_sources",
+        "stickers",
     } == set(converted.table_names())
 
 
@@ -90,6 +92,22 @@ def test_event(converted):
             "icon_suffix": ".png",
         }
     ] == categories
+
+
+def test_sticker(converted):
+    sticker = list(converted["stickers"].rows)[0]
+    assert {
+        "id": "56312102498e50c6f99f1d9b",
+        "name": "Foodie",
+        "stickerType": "unlockable",
+        "group": '{"name": "collectible", "index": 47}',
+        "pickerPosition": '{"page": 1, "index": 23}',
+        "teaseText": "teaseText",
+        "unlockText": "unlockText 😉",
+        "image_prefix": "https://igx.4sqi.net/img/sticker/",
+        "image_sizes": "[60, 94, 150, 300]",
+        "image_name": "/foodie_a56e26.png",
+    } == sticker
 
 
 def test_likes(converted):
