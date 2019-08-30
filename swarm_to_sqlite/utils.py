@@ -137,6 +137,19 @@ def ensure_foreign_keys(db):
 def create_views(db):
     for name, sql in (
         (
+            "venue_details",
+            """
+select
+    min(createdAt) as first,
+    max(createdAt) as last,
+    count(venues.id) as count,
+    venues.*
+from venues
+    join checkins on checkins.venue = venues.id
+group by venues.id
+        """,
+        ),
+        (
             "checkin_details",
             """
 select

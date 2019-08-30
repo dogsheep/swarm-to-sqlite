@@ -261,7 +261,9 @@ def test_checkin_with_no_event():
 
 
 def test_view(converted):
-    assert ["checkin_details"] == converted.view_names()
+    assert {"checkin_details", "venue_details"} == set(
+        converted.view_names()
+    )
     assert [
         {
             "id": "592b2cfe09e28339ac543fde",
@@ -276,3 +278,22 @@ def test_view(converted):
             "event_name": "A movie",
         }
     ] == list(converted["checkin_details"].rows)
+    assert [
+        {
+            "first": "2017-05-28T22:03:10",
+            "last": "2017-05-28T22:03:10",
+            "count": 1,
+            "id": "453774dcf964a520bd3b1fe3",
+            "name": "Restaurant Name",
+            "address": "Address",
+            "crossStreet": "at cross street",
+            "postalCode": "94xxx",
+            "cc": "US",
+            "city": "City",
+            "state": "State",
+            "country": "Country",
+            "formattedAddress": '["Address (at cross street)", "City, State, Zip", "Country"]',
+            "latitude": 38.456,
+            "longitude": -122.345,
+        }
+    ] == list(converted["venue_details"].rows)
