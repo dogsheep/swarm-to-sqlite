@@ -2,7 +2,7 @@ import click
 import os
 import json
 import sqlite_utils
-from .utils import save_checkin, ensure_foreign_keys
+from .utils import save_checkin, ensure_foreign_keys, create_views
 
 
 @click.command()
@@ -40,3 +40,4 @@ def cli(db_path, token, file, silent):
                 save_checkin(checkin, db)
                 bar.update(1)
     ensure_foreign_keys(db)
+    create_views(db)

@@ -16,6 +16,7 @@ def converted():
     db = sqlite_utils.Database(":memory:")
     utils.save_checkin(load_checkin(), db)
     utils.ensure_foreign_keys(db)
+    utils.create_views(db)
     return db
 
 
@@ -257,3 +258,21 @@ def test_checkin_with_no_event():
     assert 1 == db["checkins"].count
     row = list(db["checkins"].rows)[0]
     assert row["event"] is None
+
+
+def test_view(converted):
+    assert ["checkin_details"] == converted.view_names()
+    assert [
+        {
+            "id": "592b2cfe09e28339ac543fde",
+            "createdAt": "2017-05-28T22:03:10",
+            "venue_id": "453774dcf964a520bd3b1fe3",
+            "venue_name": "Restaurant Name",
+            "latitude": 38.456,
+            "longitude": -122.345,
+            "venue_categories": "Category Name",
+            "shout": "7th wedding anniversary — with Natalie",
+            "createdBy": None,
+            "event_name": "A movie",
+        }
+    ] == list(converted["checkin_details"].rows)

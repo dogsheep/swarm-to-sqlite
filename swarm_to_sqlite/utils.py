@@ -17,6 +17,8 @@ def save_checkin(checkin, db):
         checkin["venue"] = venue["id"]
     else:
         checkin["venue"] = None
+    if "createdBy" not in checkin:
+        checkin["createdBy"] = None
     if "event" in checkin:
         event = checkin.pop("event")
         categories = event.pop("categories")
@@ -130,3 +132,35 @@ def ensure_foreign_keys(db):
                 db[fk.table].add_foreign_key(fk.column, fk.other_table, fk.other_column)
             except AlterError:
                 pass
+
+
+def create_views(db):
+    for name, sql in (
+        (
+            "checkin_details",
+            """
+select
+    checkins.id,
+    createdAt,
+    venues.id as venue_id,
+    venues.name as venue_name,
+    venues.latitude,
+    venues.longitude,
+    group_concat(categories.name) as venue_categories,
+    shout,
+    createdBy,
+    events.name as event_name
+from checkins
+    join venues on checkins.venue = venues.id
+    left join events on checkins.event = events.id
+    join categories_venues on venues.id = categories_venues.venues_id
+    join categories on categories.id = categories_venues.categories_id
+group by checkins.id
+order by createdAt desc
+        """,
+        ),
+    ):
+        try:
+            db.create_view(name, sql)
+        except Exception:
+            pass
