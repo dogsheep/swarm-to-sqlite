@@ -4,6 +4,8 @@ from sqlite_utils.db import AlterError, ForeignKey
 
 
 def save_checkin(checkin, db):
+    # Create copy that we can modify
+    checkin = dict(checkin)
     if "venue" in checkin:
         venue = checkin.pop("venue")
         categories = venue.pop("categories")

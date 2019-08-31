@@ -11,9 +11,17 @@ from .utils import save_checkin, ensure_foreign_keys, create_views, fetch_all_ch
     type=click.Path(file_okay=True, dir_okay=False, allow_dash=False),
     required=True,
 )
-@click.option("-t", "--token", help="Foursquare OAuth token")
-@click.option("--load", help="Load checkins from this JSON file on disk")
-@click.option("--save", help="Save checkins to this JSON file on disk")
+@click.option("--token", envvar="FOURSQUARE_TOKEN", help="Foursquare OAuth token")
+@click.option(
+    "--load",
+    type=click.File(),
+    help="Load checkins from this JSON file on disk",
+)
+@click.option(
+    "--save",
+    type=click.File("w"),
+    help="Save checkins to this JSON file on disk",
+)
 @click.option("-s", "--silent", is_flag=True, help="Don't show progress bar")
 def cli(db_path, token, load, save, silent):
     "Save Swarm checkins to a SQLite database"
@@ -29,12 +37,15 @@ def cli(db_path, token, load, save, silent):
         checkins = fetch_all_checkins(token, count_first=True)
         checkin_count = next(checkins)
     else:
-        checkins = json.load(open(load))
+        checkins = json.load(load)
         checkin_count = len(checkins)
     db = sqlite_utils.Database(db_path)
+    saved = []
     if silent:
         for checkin in checkins:
             save_checkin(checkin, db)
+            if save:
+                saved.append(checkin)
     else:
         with click.progressbar(
             length=checkin_count,
@@ -45,5 +56,9 @@ def cli(db_path, token, load, save, silent):
             for checkin in checkins:
                 save_checkin(checkin, db)
                 bar.update(1)
+                if save:
+                    saved.append(checkin)
     ensure_foreign_keys(db)
     create_views(db)
+    if save:
+        json.dump(saved, save)
