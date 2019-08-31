@@ -12,7 +12,7 @@ Create a SQLite database containing your checkin history from Foursquare Swarm.
 
 ## Usage
 
-You will need to first obtain a valid OAuth token for your Foursquare account.
+You will need to first obtain a valid OAuth token for your Foursquare account. You can do so using this tool: https://your-foursquare-oauth-token.glitch.me/
 
 Simplest usage is to simply provide the name of the database file you wish to write to. The tool will prompt you to paste in your token, and will then download your checkins and store them in the specified database file.
 
