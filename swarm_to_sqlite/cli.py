@@ -13,14 +13,10 @@ from .utils import save_checkin, ensure_foreign_keys, create_views, fetch_all_ch
 )
 @click.option("--token", envvar="FOURSQUARE_TOKEN", help="Foursquare OAuth token")
 @click.option(
-    "--load",
-    type=click.File(),
-    help="Load checkins from this JSON file on disk",
+    "--load", type=click.File(), help="Load checkins from this JSON file on disk"
 )
 @click.option(
-    "--save",
-    type=click.File("w"),
-    help="Save checkins to this JSON file on disk",
+    "--save", type=click.File("w"), help="Save checkins to this JSON file on disk"
 )
 @click.option("-s", "--silent", is_flag=True, help="Don't show progress bar")
 def cli(db_path, token, load, save, silent):

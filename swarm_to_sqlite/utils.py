@@ -43,7 +43,7 @@ def save_checkin(checkin, db):
     else:
         checkin["sticker"] = None
 
-    checkin["created"] = datetime.datetime.fromtimestamp(
+    checkin["created"] = datetime.datetime.utcfromtimestamp(
         checkin["createdAt"]
     ).isoformat()
     checkin["source"] = db["sources"].lookup(checkin["source"])
@@ -77,7 +77,7 @@ def save_checkin(checkin, db):
     # Handle photos
     photos_table = db.table("photos", pk="id", foreign_keys=("user", "source"))
     for photo in photos:
-        photo["created"] = datetime.datetime.fromtimestamp(
+        photo["created"] = datetime.datetime.utcfromtimestamp(
             photo["createdAt"]
         ).isoformat()
         photo["source"] = db["sources"].lookup(photo["source"])
@@ -89,7 +89,9 @@ def save_checkin(checkin, db):
     # Handle posts
     posts_table = db.table("posts", pk="id")
     for post in posts:
-        post["created"] = datetime.datetime.fromtimestamp(post["createdAt"]).isoformat()
+        post["created"] = datetime.datetime.utcfromtimestamp(
+            post["createdAt"]
+        ).isoformat()
         post["post_source"] = (
             db["post_sources"].upsert(post.pop("source"), pk="id").last_pk
         )

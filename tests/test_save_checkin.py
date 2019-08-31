@@ -196,7 +196,7 @@ def test_photos(converted):
             "width": 1920,
             "height": 1440,
             "visibility": "public",
-            "created": "2018-07-01T04:48:19",
+            "created": "2018-07-01T02:48:19",
             "user": "15889193",
         },
         {
@@ -208,7 +208,7 @@ def test_photos(converted):
             "width": 1920,
             "height": 1440,
             "visibility": "public",
-            "created": "2018-07-01T04:50:35",
+            "created": "2018-07-01T02:50:35",
             "user": "15889193",
         },
         {
@@ -220,7 +220,7 @@ def test_photos(converted):
             "width": 1920,
             "height": 1440,
             "visibility": "public",
-            "created": "2018-07-01T04:50:37",
+            "created": "2018-07-01T02:50:37",
             "user": "15889193",
         },
     ] == photos
@@ -246,7 +246,7 @@ def test_posts(converted):
             "text": "The samosa chaat appetizer (easily enough for two or even four people) was a revelation - I've never tasted anything quite like it before, absolutely delicious. Chicken tika masala was amazing too.",
             "url": "https://foursquare.com/item/58994045668af77dae50b376",
             "contentId": "58994045668af77dae50b376",
-            "created": "2017-02-07T04:34:29",
+            "created": "2017-02-07T03:34:29",
             "post_source": "UJXJTUHR42CKGO54KXQWGUZJL3OJKMKMVHGJ1SWIOC5TRKAC",
             "checkin": "592b2cfe09e28339ac543fde",
         }
@@ -269,7 +269,7 @@ def test_view(converted):
     assert [
         {
             "id": "592b2cfe09e28339ac543fde",
-            "created": "2017-05-28T22:03:10",
+            "created": "2017-05-28T20:03:10",
             "venue_id": "453774dcf964a520bd3b1fe3",
             "venue_name": "Restaurant Name",
             "latitude": 38.456,
@@ -282,8 +282,8 @@ def test_view(converted):
     ] == list(converted["checkin_details"].rows)
     assert [
         {
-            "first": "2017-05-28T22:03:10",
-            "last": "2017-05-28T22:03:10",
+            "first": "2017-05-28T20:03:10",
+            "last": "2017-05-28T20:03:10",
             "count": 1,
             "venue_categories": "Category Name",
             "id": "453774dcf964a520bd3b1fe3",
