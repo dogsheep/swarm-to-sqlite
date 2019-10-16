@@ -7,17 +7,15 @@ from .utils import save_checkin, ensure_foreign_keys, create_views, fetch_all_ch
 
 
 since_re = re.compile("^(\d+)(w|h|d)$")
+
+
 def validate_since(ctx, param, value):
     if value:
         match = since_re.match(value)
         if not match:
-            raise click.BadParameter('since need to be in format 3d/2h/1w')
+            raise click.BadParameter("since need to be in format 3d/2h/1w")
         num, unit = match.groups()
-        multiplier = {
-            "d": 24 * 60 * 60,
-            "h": 60 * 60,
-            "w": 7 * 24 * 60 * 60,
-        }[unit]
+        multiplier = {"d": 24 * 60 * 60, "h": 60 * 60, "w": 7 * 24 * 60 * 60}[unit]
         return int(num) * multiplier
 
 
@@ -35,7 +33,10 @@ def validate_since(ctx, param, value):
     "--save", type=click.File("w"), help="Save checkins to this JSON file on disk"
 )
 @click.option(
-    "--since", type=str, callback=validate_since, help="Look for checkins since 1w/2d/3h ago"
+    "--since",
+    type=str,
+    callback=validate_since,
+    help="Look for checkins since 1w/2d/3h ago",
 )
 @click.option("-s", "--silent", is_flag=True, help="Don't show progress bar")
 def cli(db_path, token, load, save, since, silent):
