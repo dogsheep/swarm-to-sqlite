@@ -1,8 +1,24 @@
 import click
 import os
 import json
+import re
 import sqlite_utils
 from .utils import save_checkin, ensure_foreign_keys, create_views, fetch_all_checkins
+
+
+since_re = re.compile("^(\d+)(w|h|d)$")
+def validate_since(ctx, param, value):
+    if value:
+        match = since_re.match(value)
+        if not match:
+            raise click.BadParameter('since need to be in format 3d/2h/1w')
+        num, unit = match.groups()
+        multiplier = {
+            "d": 24 * 60 * 60,
+            "h": 60 * 60,
+            "w": 7 * 24 * 60 * 60,
+        }[unit]
+        return int(num) * multiplier
 
 
 @click.command()
@@ -18,8 +34,11 @@ from .utils import save_checkin, ensure_foreign_keys, create_views, fetch_all_ch
 @click.option(
     "--save", type=click.File("w"), help="Save checkins to this JSON file on disk"
 )
+@click.option(
+    "--since", type=str, callback=validate_since, help="Look for checkins since 1w/2d/3h ago"
+)
 @click.option("-s", "--silent", is_flag=True, help="Don't show progress bar")
-def cli(db_path, token, load, save, silent):
+def cli(db_path, token, load, save, since, silent):
     "Save Swarm checkins to a SQLite database"
     if token and load:
         raise click.ClickException("Provide either --load or --token")
@@ -30,7 +49,7 @@ def cli(db_path, token, load, save, silent):
         )
 
     if token:
-        checkins = fetch_all_checkins(token, count_first=True)
+        checkins = fetch_all_checkins(token, count_first=True, since_delta=since)
         checkin_count = next(checkins)
     else:
         checkins = json.load(load)

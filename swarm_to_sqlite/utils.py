@@ -1,4 +1,5 @@
 import datetime
+import time
 import requests
 from sqlite_utils.db import AlterError, ForeignKey
 
@@ -185,20 +186,22 @@ order by createdAt desc
             pass
 
 
-def fetch_all_checkins(token, count_first=False):
+def fetch_all_checkins(token, count_first=False, since_delta=None):
     # Generator that yields all checkins using the provided OAuth token
     # If count_first is True it first yields the total checkins count
-    beforeTimestamp = None
+    before_timestamp = None
     params = {
         "oauth_token": token,
         "v": "20190101",
         "sort": "newestfirst",
         "limit": "250",
     }
+    if since_delta:
+        params["afterTimestamp"] = int(time.time() - since_delta)
     first = True
     while True:
-        if beforeTimestamp is not None:
-            params["beforeTimestamp"] = beforeTimestamp
+        if before_timestamp is not None:
+            params["beforeTimestamp"] = before_timestamp
         url = "https://api.foursquare.com/v2/users/self/checkins"
         data = requests.get(url, params).json()
         if first:
@@ -209,4 +212,4 @@ def fetch_all_checkins(token, count_first=False):
             break
         for item in data["response"]["checkins"]["items"]:
             yield item
-        beforeTimestamp = item["createdAt"]
+        before_timestamp = item["createdAt"]

@@ -29,6 +29,12 @@ Or as an environment variable:
     $ export FOURSQUARE_TOKEN=XXX
     $ swarm-to-sqlite checkins.db
 
+To retrieve just checkins within the past X hours, days or weeks, use the `--since=` option. For example, to pull only checkins that happened within the last 10 days use:
+
+    $ swarm-to-sqlite checkins.db --token=XXX --since=10d
+
+Use `2w` for two weeks, `10h` for ten hours, `3d` for three days.
+
 In addition to saving the checkins to a database, you can also write them to a JSON file using the `--save` option:
 
     $ swarm-to-sqlite checkins.db --save=checkins.json
