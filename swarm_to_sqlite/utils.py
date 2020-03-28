@@ -14,7 +14,7 @@ def save_checkin(checkin, db):
         venue.pop("labeledLatLngs", None)
         venue["latitude"] = venue.pop("lat")
         venue["longitude"] = venue.pop("lng")
-        v = db["venues"].upsert(venue, pk="id", alter=True)
+        v = db["venues"].insert(venue, pk="id", alter=True, replace=True)
         for category in categories:
             cleanup_category(category)
             v.m2m("categories", category, pk="id")
@@ -26,7 +26,7 @@ def save_checkin(checkin, db):
     if "event" in checkin:
         event = checkin.pop("event")
         categories = event.pop("categories")
-        e = db["events"].upsert(event, pk="id", alter=True)
+        e = db["events"].insert(event, pk="id", alter=True, replace=True)
         for category in categories:
             cleanup_category(category)
             e.m2m("categories", category, pk="id")
@@ -40,7 +40,9 @@ def save_checkin(checkin, db):
         sticker["image_prefix"] = sticker_image["prefix"]
         sticker["image_sizes"] = sticker_image["sizes"]
         sticker["image_name"] = sticker_image["name"]
-        checkin["sticker"] = db["stickers"].upsert(sticker, pk="id", alter=True).last_pk
+        checkin["sticker"] = (
+            db["stickers"].insert(sticker, pk="id", alter=True, replace=True).last_pk
+        )
     else:
         checkin["sticker"] = None
 
@@ -58,15 +60,16 @@ def save_checkin(checkin, db):
     if checkin.get("createdBy"):
         created_by_user = checkin.pop("createdBy")
         cleanup_user(created_by_user)
-        db["users"].upsert(created_by_user, pk="id")
+        db["users"].insert(created_by_user, pk="id", replace=True)
         checkin["createdBy"] = created_by_user["id"]
     checkin["comments_count"] = checkin.pop("comments")["count"]
     # Actually save the checkin
-    checkins_table = db["checkins"].upsert(
+    checkins_table = db["checkins"].insert(
         checkin,
         pk="id",
         foreign_keys=(("venue", "venues", "id"), ("source", "sources", "id")),
         alter=True,
+        replace=True,
     )
     # Save m2m 'with' users and 'likes' users
     for user in users_with:
@@ -84,9 +87,9 @@ def save_checkin(checkin, db):
         photo["source"] = db["sources"].lookup(photo["source"])
         user = photo.pop("user")
         cleanup_user(user)
-        db["users"].upsert(user, pk="id")
+        db["users"].insert(user, pk="id", replace=True)
         photo["user"] = user["id"]
-        photos_table.upsert(photo)
+        photos_table.insert(photo, replace=True)
     # Handle posts
     posts_table = db.table("posts", pk="id")
     for post in posts:
@@ -94,10 +97,10 @@ def save_checkin(checkin, db):
             post["createdAt"]
         ).isoformat()
         post["post_source"] = (
-            db["post_sources"].upsert(post.pop("source"), pk="id").last_pk
+            db["post_sources"].insert(post.pop("source"), pk="id", replace=True).last_pk
         )
         post["checkin"] = checkin["id"]
-        posts_table.upsert(post, foreign_keys=("post_source", "checkin"))
+        posts_table.insert(post, foreign_keys=("post_source", "checkin"), replace=True)
 
 
 def cleanup_user(user):
