@@ -47,8 +47,7 @@ def save_checkin(checkin, db):
     checkin["created"] = datetime.datetime.utcfromtimestamp(
         checkin["createdAt"]
     ).isoformat()
-    if "source" in checkin:
-        checkin["source"] = db["sources"].lookup(checkin["source"])
+    checkin["source"] = db["sources"].lookup(checkin["source"]) if "source" in checkin else None
     users_with = checkin.pop("with", None) or []
     users_likes = []
     for group in checkin["likes"]["groups"]:
