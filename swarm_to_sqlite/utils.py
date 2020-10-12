@@ -91,7 +91,7 @@ def save_checkin(checkin, db):
         cleanup_user(user)
         db["users"].insert(user, pk="id", replace=True)
         photo["user"] = user["id"]
-        photos_table.insert(photo, replace=True)
+        photos_table.insert(photo, replace=True, alter=True)
     # Handle posts
     posts_table = db.table("posts", pk="id")
     for post in posts:
@@ -102,7 +102,7 @@ def save_checkin(checkin, db):
             db["post_sources"].insert(post.pop("source"), pk="id", replace=True).last_pk
         )
         post["checkin"] = checkin["id"]
-        posts_table.insert(post, foreign_keys=("post_source", "checkin"), replace=True)
+        posts_table.insert(post, foreign_keys=("post_source", "checkin"), replace=True, alter=True)
 
 
 def cleanup_user(user):
