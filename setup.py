@@ -31,7 +31,7 @@ setup(
         [console_scripts]
         swarm-to-sqlite=swarm_to_sqlite.cli:cli
     """,
-    install_requires=["sqlite-utils~=2.4.4", "click", "requests"],
+    install_requires=["sqlite-utils>=2.4.4", "click", "requests"],
     extras_require={"test": ["pytest"]},
     tests_require=["swarm-to-sqlite[test]"],
 )
