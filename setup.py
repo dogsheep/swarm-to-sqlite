@@ -19,6 +19,11 @@ setup(
     long_description_content_type="text/markdown",
     author="Simon Willison",
     url="https://github.com/dogsheep/swarm-to-sqlite",
+    project_urls={
+        "Issues": "https://github.com/dogsheep/swarm-to-sqlite/issues",
+        "CI": "https://github.com/dogsheep/swarm-to-sqlite/actions",
+        "Changelog": "https://github.com/dogsheep/swarm-to-sqlite/releases",
+    },
     license="Apache License, Version 2.0",
     version=VERSION,
     packages=["swarm_to_sqlite"],
