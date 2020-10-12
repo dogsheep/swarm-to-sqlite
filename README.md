@@ -3,7 +3,7 @@
 [![PyPI](https://img.shields.io/pypi/v/swarm-to-sqlite.svg)](https://pypi.org/project/swarm-to-sqlite/)
 [![Changelog](https://img.shields.io/github/v/release/dogsheep/swarm-to-sqlite?include_prereleases&label=changelog)](https://github.com/dogsheep/swarm-to-sqlite/releases)
 [![CircleCI](https://circleci.com/gh/dogsheep/swarm-to-sqlite.svg?style=svg)](https://circleci.com/gh/dogsheep/swarm-to-sqlite)
-[![License](https://img.shields.io/badge/license-Apache%202.0-blue.svg)](https://github.com/dogsheep/swarm-to-sqlite/blob/master/LICENSE)
+[![License](https://img.shields.io/badge/license-Apache%202.0-blue.svg)](https://github.com/dogsheep/swarm-to-sqlite/blob/main/LICENSE)
 
 Create a SQLite database containing your checkin history from Foursquare Swarm.
 
