@@ -46,6 +46,6 @@ Having done this, you can re-import checkins directly from that file (rather tha
 
 ## Using with Datasette
 
-The SQLite database produced by this tool is designed to be browsed using [Datasette](https://datasette.readthedocs.io/).
+The SQLite database produced by this tool is designed to be browsed using [Datasette](https://datasette.io/).
 
-You can install the [datasette-cluster-map](https://github.com/simonw/datasette-cluster-map) plugin to view your checkins on a map.
+You can install the [datasette-cluster-map](https://datasette.io/plugins/datasette-cluster-map) plugin to view your checkins on a map.
