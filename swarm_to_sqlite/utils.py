@@ -17,7 +17,7 @@ def save_checkin(checkin, db):
         v = db["venues"].insert(venue, pk="id", alter=True, replace=True)
         for category in categories:
             cleanup_category(category)
-            v.m2m("categories", category, pk="id")
+            v.m2m("categories", category, pk="id", alter=True)
         checkin["venue"] = venue["id"]
     else:
         checkin["venue"] = None
@@ -29,7 +29,7 @@ def save_checkin(checkin, db):
         e = db["events"].insert(event, pk="id", alter=True, replace=True)
         for category in categories:
             cleanup_category(category)
-            e.m2m("categories", category, pk="id")
+            e.m2m("categories", category, pk="id", alter=True)
         checkin["event"] = event["id"]
     else:
         checkin["event"] = None
@@ -62,7 +62,7 @@ def save_checkin(checkin, db):
     if checkin.get("createdBy"):
         created_by_user = checkin.pop("createdBy")
         cleanup_user(created_by_user)
-        db["users"].insert(created_by_user, pk="id", replace=True)
+        db["users"].insert(created_by_user, pk="id", replace=True, alter=True)
         checkin["createdBy"] = created_by_user["id"]
     checkin["comments_count"] = checkin.pop("comments")["count"]
     # Actually save the checkin
@@ -76,10 +76,10 @@ def save_checkin(checkin, db):
     # Save m2m 'with' users and 'likes' users
     for user in users_with:
         cleanup_user(user)
-        checkins_table.m2m("users", user, m2m_table="with", pk="id")
+        checkins_table.m2m("users", user, m2m_table="with", pk="id", alter=True)
     for user in users_likes:
         cleanup_user(user)
-        checkins_table.m2m("users", user, m2m_table="likes", pk="id")
+        checkins_table.m2m("users", user, m2m_table="likes", pk="id", alter=True)
     # Handle photos
     photos_table = db.table("photos", pk="id", foreign_keys=("user", "source"))
     for photo in photos:
@@ -89,7 +89,7 @@ def save_checkin(checkin, db):
         photo["source"] = db["sources"].lookup(photo["source"])
         user = photo.pop("user")
         cleanup_user(user)
-        db["users"].insert(user, pk="id", replace=True)
+        db["users"].insert(user, pk="id", replace=True, alter=True)
         photo["user"] = user["id"]
         photos_table.insert(photo, replace=True, alter=True)
     # Handle posts
@@ -99,10 +99,14 @@ def save_checkin(checkin, db):
             post["createdAt"]
         ).isoformat()
         post["post_source"] = (
-            db["post_sources"].insert(post.pop("source"), pk="id", replace=True).last_pk
+            db["post_sources"]
+            .insert(post.pop("source"), pk="id", replace=True, alter=True)
+            .last_pk
         )
         post["checkin"] = checkin["id"]
-        posts_table.insert(post, foreign_keys=("post_source", "checkin"), replace=True, alter=True)
+        posts_table.insert(
+            post, foreign_keys=("post_source", "checkin"), replace=True, alter=True
+        )
 
 
 def cleanup_user(user):
