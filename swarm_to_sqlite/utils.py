@@ -90,6 +90,7 @@ def save_checkin(checkin, db):
         user = photo.pop("user")
         cleanup_user(user)
         db["users"].insert(user, pk="id", replace=True, alter=True)
+        photo["checkin_id"] = checkin["id"]
         photo["user"] = user["id"]
         photos_table.insert(photo, replace=True, alter=True)
     # Handle posts
@@ -170,22 +171,24 @@ group by venues.id
             """
 select
     checkins.id,
-    created,
+    checkins.created,
     venues.id as venue_id,
     venues.name as venue_name,
     venues.latitude,
     venues.longitude,
-    group_concat(categories.name) as venue_categories,
+    group_concat(distinct categories.name) as venue_categories,
     shout,
     createdBy,
-    events.name as event_name
+    events.name as event_name,
+    group_concat((photos.prefix || 'original' || photos.suffix), CHAR(10)) as photo_links
 from checkins
     join venues on checkins.venue = venues.id
     left join events on checkins.event = events.id
     join categories_venues on venues.id = categories_venues.venues_id
     join categories on categories.id = categories_venues.categories_id
+    left join photos on checkins.id = photos.checkin_id
 group by checkins.id
-order by createdAt desc
+order by checkins.createdAt desc
         """,
         ),
     ):

@@ -74,6 +74,8 @@ def cli(db_path, token, load, save, since, silent):
                 bar.update(1)
                 if save:
                     saved.append(checkin)
+    if not db["events"].exists():
+        db["events"].create({ "id": str, "name": str}, pk="id")
     ensure_foreign_keys(db)
     create_views(db)
     if save:
