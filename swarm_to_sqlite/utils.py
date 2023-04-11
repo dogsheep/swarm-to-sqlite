@@ -170,14 +170,14 @@ group by venues.id
             """
 select
     checkins.id,
-    created,
+    strftime('%Y-%m-%dT%H:%M:%S', checkins.createdAt, 'unixepoch') as created,
     venues.id as venue_id,
     venues.name as venue_name,
     venues.latitude,
     venues.longitude,
     group_concat(categories.name) as venue_categories,
-    shout,
-    createdBy,
+    checkins.shout,
+    checkins.createdBy,
     events.name as event_name
 from checkins
     join venues on checkins.venue = venues.id
@@ -185,12 +185,12 @@ from checkins
     join categories_venues on venues.id = categories_venues.venues_id
     join categories on categories.id = categories_venues.categories_id
 group by checkins.id
-order by createdAt desc
+order by checkins.createdAt desc
         """,
         ),
     ):
         try:
-            db.create_view(name, sql)
+            db.create_view(name, sql, replace=True)
         except Exception:
             pass
 
